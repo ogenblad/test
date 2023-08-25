@@ -29,7 +29,7 @@ base_packages = (
     'linux-firmware',
     'linux-headers',
     'nano',
-    'vim'
+    'vim',
     'networkmanager',
     'pipewire',
     'base-devel',
