@@ -87,7 +87,9 @@ subprocess.Popen(f'pacstrap -K /mnt {all_packages}', shell=True).wait() if not d
 print('OK')
 print('Make base configuration')
 subprocess.Popen('genfstab -U /mnt >> /mnt/etc/fstab', shell=True).wait() if not dev_mode else print('Dev-mode: skipping fstab config')
-subprocess.Popen('arch-chroot /mnt', shell=True).wait() if not dev_mode else print('Dev-mode: skipping enter arch-chroot')
+
+########## As arch-chroot ###########
+#subprocess.Popen('arch-chroot /mnt', shell=True).wait() if not dev_mode else print('Dev-mode: skipping enter arch-chroot')
 subprocess.Popen(f'ln -sf {installation_options["time_zone"]} /etc/localtime', shell=True).wait() if not dev_mode else print('Dev-mode: skipping time zone config')
 
 if (not dev_mode):
@@ -134,7 +136,12 @@ if (configure_boot_partition):
     subprocess.Popen('echo "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=\"PARTUUID\" rw" > /boot/loader/entries/arch.conf', shell=True).wait() if not dev_mode else print('Dev-mode: skipping adding arch.conf')
     print('OK')
 
-print('Exit arch-chroot')
-subprocess.Popen('exit', shell=True).wait() if not dev_mode else print('Dev-mode: skipping exit chroot')
+#print('Exit arch-chroot')
+#subprocess.Popen('exit', shell=True).wait() if not dev_mode else print('Dev-mode: skipping exit chroot')
+
+#################
+
 print('OK')
 print('\nInstallation done, please reboot')
+
+# https://www.reddit.com/r/archlinux/comments/ld4prc/arch_linux_install_script_stops_after_archchroot/
