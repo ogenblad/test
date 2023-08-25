@@ -66,29 +66,29 @@ all_packages = ' '.join(base_packages) if not additional_packages else ' '.join(
 print('Starting installation...')
 print()
 print('Format and mount root partition')
-subprocess.Popen.wait(f'mkfs.ext4 -F {installation_options["root_partition"]}', shell=True) if not dev_mode else print('Dev-mode: skipping format root partition')
-subprocess.Popen.wait(f'mount {installation_options["root_partition"]} /mnt', shell=True) if not dev_mode else print('Dev-mode: skipping mount root partition')
+subprocess.Popen(f'mkfs.ext4 -F {installation_options["root_partition"]}', shell=True).wait() if not dev_mode else print('Dev-mode: skipping format root partition')
+subprocess.Popen(f'mount {installation_options["root_partition"]} /mnt', shell=True).wait() if not dev_mode else print('Dev-mode: skipping mount root partition')
 print('OK')
 print('Make swap on swap partition')
-subprocess.Popen.wait(f'mkswap {installation_options["swap_partition"]}', shell=True) if not dev_mode else print('Dev-mode: skipping mkswap')
+subprocess.Popen(f'mkswap {installation_options["swap_partition"]}', shell=True).wait() if not dev_mode else print('Dev-mode: skipping mkswap')
 print('OK')
-subprocess.Popen.wait(f'swapon {installation_options["swap_partition"]}', shell=True) if not dev_mode else print('Dev-mode: skipping swapon')
+subprocess.Popen(f'swapon {installation_options["swap_partition"]}', shell=True).wait() if not dev_mode else print('Dev-mode: skipping swapon')
 print('OK')
 
 if (configure_boot_partition):
     print('Format boot partition')
-    subprocess.Popen.wait(f'mkfs.fat -F 32 {installation_options["boot_partition"]}', shell=True) if not dev_mode else print('Dev-mode: skipping format boot partition')
-    subprocess.Popen.wait(f'mkdir /mnt/boot', shell=True) if not dev_mode else print('Dev-mode: skipping create boot folder')
-    subprocess.Popen.wait(f'mount {installation_options["boot_partition"]} /mnt/boot', shell=True) if not dev_mode else print('Dev-mode: skipping mount boot partition')
+    subprocess.Popen(f'mkfs.fat -F 32 {installation_options["boot_partition"]}', shell=True).wait() if not dev_mode else print('Dev-mode: skipping format boot partition')
+    subprocess.Popen(f'mkdir /mnt/boot', shell=True).wait() if not dev_mode else print('Dev-mode: skipping create boot folder')
+    subprocess.Popen(f'mount {installation_options["boot_partition"]} /mnt/boot', shell=True).wait() if not dev_mode else print('Dev-mode: skipping mount boot partition')
     print('OK')
 
 print('Installing packages')
-subprocess.Popen.wait(f'pacstrap -K /mnt {all_packages}', shell=True) if not dev_mode else print('Dev-mode: skipping package installation')
+subprocess.Popen(f'pacstrap -K /mnt {all_packages}', shell=True).wait() if not dev_mode else print('Dev-mode: skipping package installation')
 print('OK')
 print('Make base configuration')
-subprocess.Popen.wait('genfstab -U /mnt >> /mnt/etc/fstab', shell=True) if not dev_mode else print('Dev-mode: skipping fstab config')
-subprocess.Popen.wait('arch-chroot /mnt', shell=True) if not dev_mode else print('Dev-mode: skipping enter arch-chroot')
-subprocess.Popen.wait(f'ln -sf {installation_options["time_zone"]} /etc/localtime', shell=True) if not dev_mode else print('Dev-mode: skipping time zone config')
+subprocess.Popen('genfstab -U /mnt >> /mnt/etc/fstab', shell=True).wait() if not dev_mode else print('Dev-mode: skipping fstab config')
+subprocess.Popen('arch-chroot /mnt', shell=True).wait() if not dev_mode else print('Dev-mode: skipping enter arch-chroot')
+subprocess.Popen(f'ln -sf {installation_options["time_zone"]} /etc/localtime', shell=True).wait() if not dev_mode else print('Dev-mode: skipping time zone config')
 
 if (not dev_mode):
     with open(r'/etc/locale.gen', 'r') as file:
@@ -98,24 +98,24 @@ if (not dev_mode):
 
     with open(r'/etc/locale.gen', 'w') as file:
         file.write(data)
-    subprocess.Popen.wait('locale-gen', shell=True)
-    subprocess.Popen.wait('echo "LANG=en_US.UTF-8" > /etc/locale.conf', shell=True)
-    subprocess.Popen.wait(f'echo "KEYMAP={installation_options["keyboard_layout"]}" > /etc/vconsole.conf', shell=True)
+    subprocess.Popen('locale-gen', shell=True).wait()
+    subprocess.Popen('echo "LANG=en_US.UTF-8" > /etc/locale.conf', shell=True).wait()
+    subprocess.Popen(f'echo "KEYMAP={installation_options["keyboard_layout"]}" > /etc/vconsole.conf', shell=True).wait()
 else:
     print('Dev-mode: skipping locale config')
 
-subprocess.Popen.wait(f'echo "{installation_options["hostname"]}" > /etc/hostname', shell=True) if not dev_mode else print('Dev-mode: skipping hostname config')
-subprocess.Popen.wait(f'echo "127.0.0.1\tlocalhost\n::1\t\t\tlocalhost\n127.0.0.1\t{installation_options["hostname"]}.localdomain\t{installation_options["hostname"]}" > /etc/hosts', shell=True) if not dev_mode else print('Dev-mode: skipping host file config')
+subprocess.Popen(f'echo "{installation_options["hostname"]}" > /etc/hostname', shell=True).wait() if not dev_mode else print('Dev-mode: skipping hostname config')
+subprocess.Popen(f'echo "127.0.0.1\tlocalhost\n::1\t\t\tlocalhost\n127.0.0.1\t{installation_options["hostname"]}.localdomain\t{installation_options["hostname"]}" > /etc/hosts', shell=True).wait() if not dev_mode else print('Dev-mode: skipping host file config')
 print('OK')
 
 print('Enable services')
-subprocess.Popen.wait('systemctl enable NetworkManager', shell=True) if not dev_mode else print('Dev-mode: skipping enable NetworkManager')
-subprocess.Popen.wait('systemctl enable ntpd', shell=True) if not dev_mode else print('Dev-mode: skipping enable ntpd')
+subprocess.Popen('systemctl enable NetworkManager', shell=True).wait() if not dev_mode else print('Dev-mode: skipping enable NetworkManager')
+subprocess.Popen('systemctl enable ntpd', shell=True).wait() if not dev_mode else print('Dev-mode: skipping enable ntpd')
 print('OK')
 
 print('Create user and add to sudoers')
 if (not dev_mode):
-    subprocess.Popen.wait(f'useradd -m -G wheel -p "$(openssl passwd -1 {installation_options["password"]})" {installation_options["user_name"]}', shell=True)
+    subprocess.Popen(f'useradd -m -G wheel -p "$(openssl passwd -1 {installation_options["password"]})" {installation_options["user_name"]}', shell=True).wait()
     with open(r'/etc/sudoers', 'r') as file:
         data = file.read()
         data = data.replace('# %wheel ALL=(ALL:ALL) ALL', '%wheel ALL=(ALL:ALL) ALL')
@@ -128,13 +128,13 @@ print('OK')
 
 if (configure_boot_partition):
     print('Configure systemd boot')
-    subprocess.Popen.wait('bootctl install', shell=True) if not dev_mode else print('Dev-mode: skipping systemd install')
-    subprocess.Popen.wait('echo "default\tarch.conf\ntimeout\t20\nconsole-mode\tmax\neditor\tno" > /boot/loader/loader.conf', shell=True) if not dev_mode else print('Dev-mode: skipping adding loader.conf')
+    subprocess.Popen('bootctl install', shell=True).wait() if not dev_mode else print('Dev-mode: skipping systemd install')
+    subprocess.Popen('echo "default\tarch.conf\ntimeout\t20\nconsole-mode\tmax\neditor\tno" > /boot/loader/loader.conf', shell=True).wait() if not dev_mode else print('Dev-mode: skipping adding loader.conf')
     # find out partuuid
-    subprocess.Popen.wait('echo "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=\"PARTUUID\" rw" > /boot/loader/entries/arch.conf', shell=True) if not dev_mode else print('Dev-mode: skipping adding arch.conf')
+    subprocess.Popen('echo "title\tArch Linux\nlinux\t/vmlinuz-linux\ninitrd\t/initramfs-linux.img\noptions\troot=\"PARTUUID\" rw" > /boot/loader/entries/arch.conf', shell=True).wait() if not dev_mode else print('Dev-mode: skipping adding arch.conf')
     print('OK')
 
 print('Exit arch-chroot')
-subprocess.Popen.wait('exit', shell=True) if not dev_mode else print('Dev-mode: skipping exit chroot')
+subprocess.Popen('exit', shell=True).wait() if not dev_mode else print('Dev-mode: skipping exit chroot')
 print('OK')
 print('\nInstallation done, please reboot')
