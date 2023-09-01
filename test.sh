@@ -29,8 +29,8 @@ setup() {
     echo 'Mounting filesystems'
     mount_filesystems
 
-    echo 'Installing base system'
-    install_base
+    # echo 'Installing base system'
+    # install_base
 
     # echo 'Chrooting into installed system to continue setup...'
     # cp $0 /mnt/setup.sh
