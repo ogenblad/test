@@ -32,19 +32,20 @@ setup() {
     echo 'Installing base system'
     install_base
 
-    echo 'Chrooting into installed system to continue setup...'
-    cp $0 /mnt/setup.sh
-    arch-chroot /mnt ./setup.sh chroot
+    # echo 'Chrooting into installed system to continue setup...'
+    # cp $0 /mnt/setup.sh
+    # arch-chroot /mnt ./setup.sh chroot
 
-    if [ -f /mnt/setup.sh ]
-    then
-        echo 'ERROR: Something failed inside the chroot, not unmounting filesystems so you can investigate.'
-        echo 'Make sure you unmount everything before you try to run this script again.'
-    else
-        echo 'Unmounting filesystems'
-        unmount_filesystems
-        echo 'Done! Reboot system.'
-    fi
+    # if [ -f /mnt/setup.sh ]
+    # then
+    #     echo 'ERROR: Something failed inside the chroot, not unmounting filesystems so you can investigate.'
+    #     echo 'Make sure you unmount everything before you try to run this script again.'
+    # else
+    #     echo 'Unmounting filesystems'
+    #     unmount_filesystems
+    #     echo 'Done! Reboot system.'
+    # fi
+    echo 'test done'
 }
 
 configure() {
